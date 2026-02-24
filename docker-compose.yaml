@@ -4,8 +4,8 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider distributions you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:3.1.6}
-  build: .
+  image: sun251044/practice-de:scheduler
+  # build: .
   env_file:
     - ${ENV_FILE_PATH:-.env}
   environment:
@@ -105,6 +105,7 @@ services:
 
   airflow-apiserver:
     <<: *airflow-common
+    image: sun251044/practice-de:apiserver
     command: api-server
     ports:
       - "8080:8080"
@@ -122,6 +123,7 @@ services:
 
   airflow-scheduler:
     <<: *airflow-common
+    image: sun251044/practice-de:scheduler
     command: scheduler
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
@@ -152,6 +154,7 @@ services:
 
   airflow-worker:
     <<: *airflow-common
+    image: sun251044/practice-de:worker
     command: celery worker
     healthcheck:
       # yamllint disable rule:line-length
@@ -177,6 +180,7 @@ services:
 
   airflow-triggerer:
     <<: *airflow-common
+    image: sun251044/practice-de:triggerer
     command: triggerer
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
