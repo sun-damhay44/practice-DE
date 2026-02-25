@@ -1,0 +1,37 @@
+name: DE-Pipeline-Production
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # ปุ่มกด Manual ที่เราคุยกัน
+
+jobs:
+  # 1. งานตรวจสอบ (CI)
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.9' }
+      - name: Install Test Tools
+        run: pip install pytest flake8
+      - name: Run Tests
+        run: pytest tests/  # รันเทสที่เราเขียนไว้
+
+  # 2. งานสร้างและส่ง (CD)
+  #build-and-deploy:
+  #  needs: quality-check # ต้องผ่าน CI ก่อนเท่านั้น!
+  #  runs-on: ubuntu-latest
+  #  if: github.ref == 'refs/heads/main' # รันเฉพาะเมื่อเป็นสาขาหลัก
+  #  steps:
+  #    - name: Login to Docker Hub
+  #      uses: docker/login-action@v3
+  #      with:
+  #        username: ${{ secrets.DOCKER_USER_3 }}
+  #        password: ${{ secrets.DOCKER_PASS_3 }}
+  #    - name: Build and Push
+  #      run: |
+  #        docker build -t user/de-project:latest .
+  #        docker push user/de-project:latest
+          
