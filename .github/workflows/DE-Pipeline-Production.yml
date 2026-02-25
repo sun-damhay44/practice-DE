@@ -34,4 +34,20 @@ jobs:
   #      run: |
   #        docker build -t user/de-project:latest .
   #        docker push user/de-project:latest
-          
+
+
+   # นี่คือหน้าตาของส่วน CD ที่ DE ใช้กันจริงๆ เพื่อให้ระบบไม่ "ปิด" แต่เป็นการ "สลับตัวใหม่ขึ้นมาแทน"
+  #deploy-to-server:
+  #  needs: build-and-push # ต้องรอให้ส่งของขึ้น Docker Hub เสร็จก่อน
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: SSH to Server and Update
+  #      uses: appleboy/ssh-action@v1.0.3
+  #      with:
+  #        host: ${{ secrets.SERVER_HOST }}
+  #        username: ${{ secrets.SERVER_USER }}
+  #        key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #        script: |
+  #          cd /home/project/practice-de
+  #          docker compose pull             # 1. ดึงของใหม่ (Pull)
+  #          docker compose up -d --remove-orphans # 2. อัปเดตตัวใหม่ (Up) โดยไม่ปิดระบบค้างไว้       
